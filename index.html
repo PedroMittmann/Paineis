@@ -26,7 +26,7 @@
             border-radius: 16px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            max-width: 1400px;
+            max-width: 2000px;
             width: 100%;
             margin-top: 20px;
             overflow: hidden; /* Garante que o conteúdo não vaze */
@@ -305,7 +305,7 @@
         }
         #panel-fluxo .flow-step {
             flex-shrink: 0;
-            width: 220px;
+            width: 340px;
             background-color: #f1f5f9;
             border-radius: 12px;
             padding: 20px;
@@ -458,11 +458,11 @@
         .header-container {
             width: 100%;
             display: flex;
-            justify-content: space-between; /* Logos à esquerda, texto à direita */
-            align-items: center;
+            justify-content: start; /* Logos à esquerda, texto à direita */
+            align-items: end;
             padding: 20px 40px;
-            background-color: #f1f5f9;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
             flex-wrap: wrap; /* Permite que os elementos quebrem linha em telas menores */
             gap: 20px; /* Espaçamento entre os grupos de elementos no cabeçalho */
         }
@@ -641,20 +641,28 @@
     </style>
 </head>
 <body>
-<div class="header-container">
-    <div class="logo-group">
-        <img src="img/logoalpha.png" alt="Logo Alpha" class="logo-tech"
-             onerror="this.src='https://placehold.co/200x120/f1f5f9/94a3b8?text=Alpha'">
-        <img src="img/logoagro.jpg" alt="Logo Agro" class="logo-tech"
-             onerror="this.src='https://placehold.co/200x120/f1f5f9/94a3b8?text=Agro'">
-    </div>
-    <div class="company-name">
-        ALPHA SOFTWARE
-    </div>
-</div>
+
 
     <div class="main-site-container">
-        <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Painéis de Gestão e Suporte Alpha - 05/2025</h1>
+        <div class="header-container">
+            <a href="https://alphasoftware.com.br/" target="_blank">
+                <img src="img/logoalpha.png" alt="Logo Alpha" class="logo-tech"
+             onerror="this.src='https://placehold.co/200x120/f1f5f9/94a3b8?text=Alpha'">
+
+            </a>
+            
+             
+            <h1 class="text-4xl font-bold text-end mb-4 text-gray-800 ">Painéis de Gestão e Suporte Alpha - 05/2025</h1>
+        </div>
+        <!-- <div class="header-container"> -->
+    <!-- <div class="logo-group">
+        
+        <img src="img/logoagro.jpg" alt="Logo Agro" class="logo-tech"
+             onerror="this.src='https://placehold.co/200x120/f1f5f9/94a3b8?text=Agro'">
+    </div> -->
+
+<!-- </div> -->
+        
 
         <nav class="nav-buttons">
             <button class="nav-button" data-panel-id="panel-calendario">Calendário de Plantões</button>
@@ -928,61 +936,72 @@
         </section>
 
         <section id="panel-bonificacao" class="panel-content hidden">
-            <div class="highlight-card">
-                <h2 class="title-bebas text-5xl md:text-6xl mb-6">Analista Destaque do Mês</h2>
-                
-                <div class="text-6xl mb-6">🏆</div>
+    <div class="highlight-card">
+        <h2 class="title-bebas text-5xl md:text-6xl mb-6 text-center">Analista Destaque do Mês</h2>
 
-                <div class="analyst-photo-container">
-                    <img src="img/hebert.png" alt="Foto do Analista Destaque" onerror="this.src='https://placehold.co/180x180/cbd5e1/64748b?text=FOTO'">
-                </div>
-                
-                <h3 class="analyst-name text-4xl md:text-5xl">Heberth Diego</h3>
-                <p class="text-lg text-gray-600 mb-4">Parabéns pelo seu excelente desempenho!</p>
+        <div class="text-6xl text-center mb-6">🏆</div>
 
-                <div class="score-box">
-                    Pontuação Total: R$ 900,00 Reais
-                </div>
+        <div class="analyst-photo-container text-center mb-4">
+            <img src="img/hebert.png" alt="Foto do Analista Destaque"
+                 onerror="this.src='https://placehold.co/180x180/cbd5e1/64748b?text=FOTO'" class="mx-auto">
+        </div>
 
-                <div class="criteria-list">
-                    <h4 class="text-xl font-bold mb-3 text-gray-800">Principais Critérios:</h4>
+        <h3 class="analyst-name text-4xl md:text-5xl text-center">Heberth Diego</h3>
+        <p class="text-lg text-gray-600 text-center mb-4">Parabéns pelo seu excelente desempenho!</p>
+
+        <div class="score-box text-center mb-6">
+            <strong>Pontuação Total:</strong> R$ 500,00 Reais
+        </div>
+
+        <!-- Container em Flex para exibir Critérios e Ranking lado a lado -->
+        <div class="flex flex-col md:flex-row gap-8 justify-between">
+            <!-- Principais Critérios -->
+            <div class="criteria-list flex-1">
+                <h4 class="text-xl font-bold mb-3 text-gray-800">Principais Critérios:</h4>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
                     <li>Fechamento de tickets e Lançamentos de Treinamentos</li>
                     <li>Acessos ao Curso no EAD e Documentação da Versão</li>
                     <li>Criação de Artigos, documentos e vídeos</li>
                     <li>Feedback e indicações de contratações</li>
                     <li>Avaliação de clientes e produtividade do Neo Code</li>
-                </div>
+                </ul>
+            </div>
 
-                <div class="ranking-section">
-                    <h4 class="text-xl font-bold mb-4 text-gray-800 text-center">Ranking Geral (Top 5)</h4>
-                    <div class="ranking-item">
-                        <span class="position">1º</span>
+            <!-- Ranking -->
+            <div class="ranking-section flex-1">
+                <h4 class="text-xl font-bold mb-4 text-gray-800 text-center md:text-left">Ranking Geral (Top 5)</h4>
+                <div class="space-y-2 text-gray-700">
+                    <div class="ranking-item flex justify-between">
+                        <span class="position font-semibold">1º</span>
                         <span class="name">Heberth Diego</span>
-                        <span class="score">R$ 500,00</span>
+                        <span class="score font-semibold">R$ 500,00</span>
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item flex justify-between">
                         <span class="position">2º</span>
                         <span class="name">Edmilson Junior</span>
                         <span class="score">R$ 200,00</span>
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item flex justify-between">
                         <span class="position">3º</span>
                         <span class="name">Luiz</span>
                         <span class="score">R$ 100,00</span>
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item flex justify-between">
                         <span class="position">4º</span>
                         <span class="name">Geneses</span>
                         <span class="score">R$ 100,00</span>
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item flex justify-between">
                         <span class="position">5º</span>
                         <span class="name">Pedro</span>
                         <span class="score">R$ 55,00</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
+
 
         <section id="panel-fluxo" class="panel-content hidden">
             <div class="flow-container">
