@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painéis de Gestão e Suporte</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Bebas+Neue&family=Lato:wght@400;700&family=Roboto:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos globais para o corpo do site */
+        body {
+            font-family: 'Inter', sans-serif; /* Fonte padrão para o site */
+            background-color: #f0f4f8; /* Fundo cinza claro para o site */
+            color: #334155;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Container principal do site */
+        .main-site-container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 1400px;
+            width: 100%;
+            margin-top: 20px;
+            overflow: hidden; /* Garante que o conteúdo não vaze */
+        }
+
+        /* Estilos para a navegação (abas/botões) */
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap; /* Permite que os botões quebrem linha em telas pequenas */
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 10px;
+            background-color: #e2e8f0;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            background-color: #cbd5e1;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            flex-grow: 1; /* Permite que os botões cresçam para preencher o espaço */
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background-color: #94a3b8;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.active {
+            background-color: #3b82f6; /* Azul primário */
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para as seções de conteúdo dos painéis */
+        .panel-content {
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        /* Estilos específicos para o Calendário de Plantões */
+        #panel-calendario .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #panel-calendario .day-header, #panel-calendario .calendar-day {
+            background-color: #ffffff;
+            padding: 10px 5px;
+            text-align: center;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100px;
+            box-sizing: border-box;
+        }
+        #panel-calendario .day-header {
+            background-color: #cbd5e1;
+            font-weight: 600;
+            color: #334155;
+            padding: 15px 5px;
+        }
+        #panel-calendario .calendar-day.weekend {
+            background-color: #fff7ed;
+        }
+        #panel-calendario .calendar-day.night-shift {
+            background-color: #e0f2fe;
+        }
+        #panel-calendario .analyst-name {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        #panel-calendario .analyst-joao { background-color: #bfdbfe; color: #1e40af; }
+        #panel-calendario .analyst-carla { background-color: #d1fae5; color: #065f46; }
+        #panel-calendario .analyst-pedro { background-color: #fef3c7; color: #92400e; }
+        #panel-calendario .analyst-ana { background-color: #fee2e2; color: #991b1b; }
+        #panel-calendario .analyst-lucas { background-color: #e0e7ff; color: #3730a3; }
+        #panel-calendario .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        #panel-calendario .legend-color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        #panel-calendario .qr-code-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Estilos específicos para a Arte de Bonificação */
+        #panel-bonificacao .highlight-card {
+            background: linear-gradient(145deg, #f0f4f8, #e2e8f0);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ffd700;
+            margin: 0 auto; /* Centraliza o card */
+        }
+        #panel-bonificacao .title-bebas {
+            font-family: 'Bebas Neue', sans-serif;
+            color: #1a202c;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 2px;
+        }
+        #panel-bonificacao .analyst-photo-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 6px solid #ffd700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.4);
+            margin-bottom: 25px;
+            position: relative;
+            background-color: #cbd5e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #64748b;
+        }
+        #panel-bonificacao .analyst-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #panel-bonificacao .analyst-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            color: #1a202c;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #panel-bonificacao .score-box {
+            background-color: #ffd700;
+            color: #1a202c;
+            padding: 15px 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        #panel-bonificacao .criteria-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: #475569;
+            text-align: left;
+            width: 100%;
+            max-width: 400px;
+        }
+        #panel-bonificacao .criteria-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        #panel-bonificacao .criteria-list li::before {
+            content: '✨';
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        #panel-bonificacao .ranking-section {
+            background-color: #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #panel-bonificacao .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        #panel-bonificacao .ranking-item:last-child {
+            border-bottom: none;
+        }
+        #panel-bonificacao .ranking-item .position {
+            font-weight: 700;
+            color: #1a202c;
+            width: 30px;
+            text-align: left;
+        }
+        #panel-bonificacao .ranking-item .name {
+            flex-grow: 1;
+            text-align: left;
+            margin-left: 10px;
+            color: #334155;
+        }
+        #panel-bonificacao .ranking-item .score {
+            font-weight: 700;
+            color: #475569;
+        }
+
+        /* Estilos específicos para o Fluxo de Atendimento */
+        #panel-fluxo .flow-container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 1400px;
+            width: 100%;
+            overflow-x: auto;
+            margin: 0 auto; /* Centraliza o container */
+        }
+        #panel-fluxo .flow-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        #panel-fluxo .flow-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        #panel-fluxo .flow-subtitle {
+            font-size: 1.3rem;
+            color: #64748b;
+        }
+        #panel-fluxo .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            padding-bottom: 20px;
+        }
+        #panel-fluxo .flow-step {
+            flex-shrink: 0;
+            width: 220px;
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin: 0 15px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        #panel-fluxo .flow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        #panel-fluxo .flow-step-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+        #panel-fluxo .flow-step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+        #panel-fluxo .flow-step-description {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+        #panel-fluxo .step-start {
+            background-color: #dcfce7;
+            border: 2px solid #22c55e;
+        }
+        #panel-fluxo .step-in-progress {
+            background-color: #ffedd5;
+            border: 2px solid #f97316;
+        }
+        #panel-fluxo .step-resolved {
+            background-color: #dbeafe;
+            border: 2px solid #3b82f6;
+        }
+        #panel-fluxo .arrow {
+            flex-shrink: 0;
+            font-size: 3rem;
+            color: #94a3b8;
+            margin: 0 -5px;
+        }
+
+        /* Estilos específicos para o Painel de Implantações */
+        #panel-implantacoes-main .dashboard-container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto; /* Centraliza o container */
+        }
+        #panel-implantacoes-main .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #panel-implantacoes-main .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        #panel-implantacoes-main .dashboard-subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+        #panel-implantacoes-main .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        #panel-implantacoes-main .company-card {
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        #panel-implantacoes-main .company-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        #panel-implantacoes-main .company-logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: #cbd5e1;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #475569;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+        #panel-implantacoes-main .company-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        #panel-implantacoes-main .analyst-info {
+            font-size: 0.95rem;
+            color: #475569;
+            margin-bottom: 15px;
+        }
+        #panel-implantacoes-main .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        #panel-implantacoes-main .status-badge.in-progress {
+            background-color: #bfdbfe;
+            color: #1e40af;
+        }
+        #panel-implantacoes-main .status-badge.finalizing {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        #panel-implantacoes-main .status-badge .icon {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+        /* Responsividade geral para telas menores */
+        @media (max-width: 768px) {
+            .main-site-container {
+                padding: 10px;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            .panel-content {
+                padding: 15px;
+            }
+
+            /* Calendário */
+            #panel-calendario .calendar-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+            #panel-calendario .day-header, #panel-calendario .calendar-day {
+                min-height: 70px;
+                padding: 5px 2px;
+                font-size: 0.8rem;
+            }
+            #panel-calendario .analyst-name {
+                font-size: 0.65rem;
+                padding: 2px 5px;
+            }
+            #panel-calendario .qr-code-placeholder {
+                width: 50px;
+                height: 50px;
+                font-size: 0.5rem;
+            }
+
+            /* Bonificação */
+            #panel-bonificacao .highlight-card {
+                padding: 20px;
+            }
+            #panel-bonificacao .title-bebas {
+                font-size: 3rem;
+            }
+            #panel-bonificacao .analyst-photo-container {
+                width: 120px;
+                height: 120px;
+            }
+            #panel-bonificacao .analyst-name {
+                font-size: 2.5rem;
+            }
+            #panel-bonificacao .score-box {
+                font-size: 1.4rem;
+                padding: 10px 20px;
+            }
+            #panel-bonificacao .criteria-list {
+                font-size: 0.95rem;
+            }
+            #panel-bonificacao .ranking-section {
+                padding: 15px;
+            }
+            #panel-bonificacao .ranking-item {
+                font-size: 0.9rem;
+            }
+
+            /* Fluxo de Atendimento */
+            #panel-fluxo .flow-container {
+                padding: 20px;
+            }
+            #panel-fluxo .flow-title {
+                font-size: 2rem;
+            }
+            #panel-fluxo .flow-subtitle {
+                font-size: 1rem;
+            }
+            #panel-fluxo .flow-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            #panel-fluxo .flow-step {
+                width: 90%;
+                max-width: 280px;
+                margin: 10px 0;
+            }
+            #panel-fluxo .arrow {
+                transform: rotate(90deg);
+                margin: 5px 0;
+            }
+
+            /* Implantações */
+            #panel-implantacoes-main .dashboard-container {
+                padding: 20px;
+            }
+            #panel-implantacoes-main .dashboard-title {
+                font-size: 2rem;
+            }
+            #panel-implantacoes-main .dashboard-subtitle {
+                font-size: 1rem;
+            }
+            #panel-implantacoes-main .company-grid {
+                grid-template-columns: 1fr;
+            }
+            #panel-implantacoes-main .company-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-site-container">
+        <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Painéis de Gestão e Suporte</h1>
+
+        <nav class="nav-buttons">
+            <button class="nav-button active" onclick="showPanel('panel-calendario', this)">Calendário de Plantões</button>
+            <button class="nav-button" onclick="showPanel('panel-bonificacao', this)">Analista Destaque</button>
+            <button class="nav-button" onclick="showPanel('panel-fluxo', this)">Fluxo de Atendimento</button>
+            <button class="nav-button" onclick="showPanel('panel-implantacoes-main', this)">Painel de Implantações</button>
+        </nav>
+
+        <section id="panel-calendario" class="panel-content">
+            <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Calendário de Plantões – Apenas Sábados</h2>
+
+            <div class="mb-10">
+                <h3 class="text-2xl font-semibold text-center mb-4 text-gray-700">Maio 2025</h3>
+                <div class="calendar-grid">
+                    <div class="day-header">Dom</div>
+                    <div class="day-header">Seg</div>
+                    <div class="day-header">Ter</div>
+                    <div class="day-header">Qua</div>
+                    <div class="day-header">Qui</div>
+                    <div class="day-header">Sex</div>
+                    <div class="day-header weekend">Sáb</div>
+
+                    <div class="calendar-day text-gray-400">27</div>
+                    <div class="calendar-day text-gray-400">28</div>
+                    <div class="calendar-day text-gray-400">29</div>
+                    <div class="calendar-day text-gray-400">30</div>
+                    <div class="calendar-day text-gray-400">1</div>
+                    <div class="calendar-day text-gray-400">2</div>
+                    <div class="calendar-day weekend">
+                        <span class="font-bold text-lg">3</span>
+                        <span class="analyst-name analyst-pedro">Pedro</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">4</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">5</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">6</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">7</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">8</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">9</span>
+                    </div>
+                    <div class="calendar-day weekend night-shift">
+                        <span class="font-bold text-lg">10</span>
+                        <span class="analyst-name analyst-lucas">Lucas</span>
+                        <span class="text-xs text-gray-600">🌙 Noite</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">11</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">12</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">13</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">14</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">15</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">16</span>
+                    </div>
+                    <div class="calendar-day weekend">
+                        <span class="font-bold text-lg">17</span>
+                        <span class="analyst-name analyst-joao">João</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">18</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">19</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">20</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">21</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">22</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">23</span>
+                    </div>
+                    <div class="calendar-day weekend">
+                        <span class="font-bold text-lg">24</span>
+                        <span class="analyst-name analyst-carla">Carla</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">25</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">26</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">27</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">28</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">29</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">30</span>
+                    </div>
+                    <div class="calendar-day weekend night-shift">
+                        <span class="font-bold text-lg">31</span>
+                        <span class="analyst-name analyst-ana">Ana</span>
+                        <span class="text-xs text-gray-600">🌙 Noite</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="text-2xl font-semibold text-center mb-4 text-gray-700">Junho 2025</h3>
+                <div class="calendar-grid">
+                    <div class="day-header">Dom</div>
+                    <div class="day-header">Seg</div>
+                    <div class="day-header">Ter</div>
+                    <div class="day-header">Qua</div>
+                    <div class="day-header">Qui</div>
+                    <div class="day-header">Sex</div>
+                    <div class="day-header weekend">Sáb</div>
+
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">1</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">2</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">3</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">4</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">5</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">6</span>
+                    </div>
+                    <div class="calendar-day weekend">
+                        <span class="font-bold text-lg">7</span>
+                        <span class="analyst-name analyst-pedro">Pedro</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">8</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">9</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">10</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">11</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">12</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">13</span>
+                    </div>
+                    <div class="calendar-day weekend night-shift">
+                        <span class="font-bold text-lg">14</span>
+                        <span class="analyst-name analyst-lucas">Lucas</span>
+                        <span class="text-xs text-gray-600">🌙 Noite</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">15</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">16</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">17</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">18</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">19</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">20</span>
+                    </div>
+                    <div class="calendar-day weekend">
+                        <span class="font-bold text-lg">21</span>
+                        <span class="analyst-name analyst-joao">João</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">22</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">23</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">24</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">25</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">26</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">27</span>
+                    </div>
+                    <div class="calendar-day weekend night-shift">
+                        <span class="font-bold text-lg">28</span>
+                        <span class="analyst-name analyst-carla">Carla</span>
+                        <span class="text-xs text-gray-600">🌙 Noite</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">29</span>
+                    </div>
+                    <div class="calendar-day">
+                        <span class="font-bold text-lg">30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center mt-8 p-4 bg-gray-50 rounded-lg shadow-inner">
+                <div class="legend mb-4 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-700">Legenda:</h3>
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-2">
+                        <div class="legend-item">
+                            <div class="legend-color-box analyst-joao"></div>
+                            <span>João</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color-box analyst-carla"></div>
+                            <span>Carla</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color-box analyst-pedro"></div>
+                            <span>Pedro</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color-box analyst-ana"></div>
+                            <span>Ana</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color-box analyst-lucas"></div>
+                            <span>Lucas</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="text-xl mr-2">🌙</span>
+                            <span>Plantão Noturno</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="text-xl mr-2">🗓️</span>
+                            <span>Fim de Semana</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="qr-code-placeholder flex-shrink-0">
+                    <span>QR Code para Calendário Dinâmico</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="panel-bonificacao" class="panel-content hidden">
+            <div class="highlight-card">
+                <h2 class="title-bebas text-5xl md:text-6xl mb-6">Analista Destaque do Mês</h2>
+                
+                <div class="text-6xl mb-6">🏆</div>
+
+                <div class="analyst-photo-container">
+                    <img src="https://placehold.co/180x180/cbd5e1/64748b?text=FOTO" alt="Foto do Analista Destaque" onerror="this.src='https://placehold.co/180x180/cbd5e1/64748b?text=FOTO'">
+                </div>
+                
+                <h3 class="analyst-name text-4xl md:text-5xl">MARIA SILVA</h3>
+                <p class="text-lg text-gray-600 mb-4">Parabéns pelo seu excelente desempenho!</p>
+
+                <div class="score-box">
+                    Pontuação Total: 985
+                </div>
+
+                <div class="criteria-list">
+                    <h4 class="text-xl font-bold mb-3 text-gray-800">Principais Critérios:</h4>
+                    <li>Fechamento de tickets e Lançamentos de Treinamentos</li>
+                    <li>Acessos ao Curso no EAD e Documentação da Versão</li>
+                    <li>Criação de Artigos, documentos e vídeos</li>
+                    <li>Feedback e indicações de contratações</li>
+                    <li>Avaliação de clientes e produtividade do Neo Code</li>
+                </div>
+
+                <div class="ranking-section">
+                    <h4 class="text-xl font-bold mb-4 text-gray-800 text-center">Ranking Geral (Top 5)</h4>
+                    <div class="ranking-item">
+                        <span class="position">1º</span>
+                        <span class="name">Maria Silva</span>
+                        <span class="score">985</span>
+                    </div>
+                    <div class="ranking-item">
+                        <span class="position">2º</span>
+                        <span class="name">João Santos</span>
+                        <span class="score">950</span>
+                    </div>
+                    <div class="ranking-item">
+                        <span class="position">3º</span>
+                        <span class="name">Carla Mendes</span>
+                        <span class="score">920</span>
+                    </div>
+                    <div class="ranking-item">
+                        <span class="position">4º</span>
+                        <span class="name">Pedro Costa</span>
+                        <span class="score">890</span>
+                    </div>
+                    <div class="ranking-item">
+                        <span class="position">5º</span>
+                        <span class="name">Ana Oliveira</span>
+                        <span class="score">875</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="panel-fluxo" class="panel-content hidden">
+            <div class="flow-container">
+                <header class="flow-header">
+                    <h2 class="flow-title">Nosso Fluxo de Atendimento</h2>
+                    <p class="flow-subtitle">Clareza e Eficiência no Suporte</p>
+                </header>
+
+                <div class="flow-steps">
+                    <div class="flow-step step-start">
+                        <div class="flow-step-icon">📧</div> <h3 class="flow-step-title">1. Abertura de Chamado</h3>
+                        <p class="flow-step-description">O cliente registra sua solicitação via portal, e-mail ou telefone.</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="flow-step step-in-progress">
+                        <div class="flow-step-icon">🔍</div> <h3 class="flow-step-title">2. Triagem Inicial</h3>
+                        <p class="flow-step-description">A equipe de suporte avalia a natureza e urgência do chamado.</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="flow-step step-in-progress">
+                        <div class="flow-step-icon">🏷️</div> <h3 class="flow-step-title">3. Classificação</h3>
+                        <p class="flow-step-description">O chamado é categorizado como urgente ou comum, priorizando o atendimento.</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="flow-step step-in-progress">
+                        <div class="flow-step-icon">➡️</div> <h3 class="flow-step-title">4. Encaminhamento</h3>
+                        <p class="flow-step-description">O chamado é direcionado ao analista mais adequado para a resolução.</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="flow-step step-resolved">
+                        <div class="flow-step-icon">💬</div> <h3 class="flow-step-title">5. Atendimento e Resolução</h3>
+                        <p class="flow-step-description">O analista interage com o cliente e trabalha na solução do problema.</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="flow-step step-resolved">
+                        <div class="flow-step-icon">✅</div> <h3 class="flow-step-title">6. Encerramento e Feedback</h3>
+                        <p class="flow-step-description">Após a solução, o chamado é encerrado e o feedback do cliente é coletado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="panel-implantacoes-main" class="panel-content hidden">
+            <div class="dashboard-container">
+                <header class="dashboard-header">
+                    <h2 class="dashboard-title">Painel de Implantações em Andamento</h2>
+                    <p class="dashboard-subtitle">Acompanhe o status das nossas implantações ativas.</p>
+                </header>
+
+                <div class="company-grid">
+                    <div class="company-card">
+                        <div class="flex items-start mb-4">
+                            <div class="company-logo-placeholder">LOGO</div>
+                            <div class="ml-4">
+                                <h3 class="company-name">Tech Solutions S.A.</h3>
+                                <p class="analyst-info">Analista Responsável: <span class="font-semibold">João Silva</span></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <span class="status-badge in-progress">
+                                <span class="icon">⏳</span> Em Andamento
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="flex items-start mb-4">
+                            <div class="company-logo-placeholder">LOGO</div>
+                            <div class="ml-4">
+                                <h3 class="company-name">Inova Digital Ltda.</h3>
+                                <p class="analyst-info">Analista Responsável: <span class="font-semibold">Carla Mendes</span></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <span class="status-badge finalizing">
+                                <span class="icon">✅</span> Finalizando
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="flex items-start mb-4">
+                            <div class="company-logo-placeholder">LOGO</div>
+                            <div class="ml-4">
+                                <h3 class="company-name">Global Connect</h3>
+                                <p class="analyst-info">Analista Responsável: <span class="font-semibold">Pedro Costa</span></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <span class="status-badge in-progress">
+                                <span class="icon">⏳</span> Em Andamento
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="flex items-start mb-4">
+                            <div class="company-logo-placeholder">LOGO</div>
+                            <div class="ml-4">
+                                <h3 class="company-name">Future Systems</h3>
+                                <p class="analyst-info">Analista Responsável: <span class="font-semibold">Ana Oliveira</span></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <span class="status-badge finalizing">
+                                <span class="icon">✅</span> Finalizando
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="flex items-start mb-4">
+                            <div class="company-logo-placeholder">LOGO</div>
+                            <div class="ml-4">
+                                <h3 class="company-name">Alpha Solutions</h3>
+                                <p class="analyst-info">Analista Responsável: <span class="font-semibold">Lucas Pereira</span></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <span class="status-badge in-progress">
+                                <span class="icon">⏳</span> Em Andamento
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="flex items-start mb-4">
+                            <div class="company-logo-placeholder">LOGO</div>
+                            <div class="ml-4">
+                                <h3 class="company-name">Dynamic Corp</h3>
+                                <p class="analyst-info">Analista Responsável: <span class="font-semibold">Maria Eduarda</span></p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <span class="status-badge in-progress">
+                                <span class="icon">⏳</span> Em Andamento
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Função para mostrar o painel selecionado e esconder os outros
+        function showPanel(panelId, clickedButton) {
+            // Esconde todos os painéis
+            const panels = document.querySelectorAll('.panel-content');
+            panels.forEach(panel => {
+                panel.classList.add('hidden');
+            });
+
+            // Remove a classe 'active' de todos os botões
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostra o painel selecionado
+            document.getElementById(panelId).classList.remove('hidden');
+
+            // Adiciona a classe 'active' ao botão clicado
+            clickedButton.classList.add('active');
+        }
+
+        // Garante que o primeiro painel esteja visível e o botão ativo ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('panel-calendario').classList.remove('hidden');
+            document.querySelector('.nav-button').classList.add('active');
+        });
+    </script>
+</body>
+</html>
