@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painéis de Gestão e Suporte</title>
+    <title>Painéis de Gestão e Suporte Alpha</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Bebas+Neue&family=Lato:wght@400;700&family=Roboto:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -38,7 +38,7 @@
             flex-wrap: wrap; /* Permite que os botões quebrem linha em telas pequenas */
             justify-content: center;
             gap: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 20px; /* Ajustado para dar espaço ao timer */
             padding: 10px;
             background-color: #e2e8f0;
             border-radius: 12px;
@@ -443,6 +443,15 @@
             font-size: 1rem;
         }
 
+        /* Estilos para o timer */
+        .timer-display {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
         /* Responsividade geral para telas menores */
         @media (max-width: 768px) {
             .main-site-container {
@@ -560,6 +569,7 @@
 </div>
 
 <style>
+    /* Estilos para o container do cabeçalho */
     .header-container {
         width: 100%;
         display: flex;
@@ -568,9 +578,10 @@
         padding: 20px 40px;
         background-color: #f1f5f9;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        flex-wrap: wrap;
+        flex-wrap: wrap; /* Permite que os elementos quebrem linha em telas menores */
     }
 
+    /* Grupo de logos */
     .logo-group {
         display: flex;
         gap: 40px;
@@ -578,6 +589,7 @@
         align-items: center;
     }
 
+    /* Estilo para as imagens dos logos */
     .logo-tech {
         height: 100px;
         width: auto;
@@ -591,6 +603,7 @@
         filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.12));
     }
 
+    /* Nome da empresa no cabeçalho */
     .company-name {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 24px;
@@ -599,6 +612,7 @@
         text-align: right;
     }
 
+    /* Responsividade para o cabeçalho em telas menores */
     @media (max-width: 768px) {
         .header-container {
             flex-direction: column;
@@ -617,19 +631,19 @@
     }
 </style>
 
-
-
     <div class="main-site-container">
         <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Painéis de Gestão e Suporte Alpha - 05/2025</h1>
 
         <nav class="nav-buttons">
-            <button class="nav-button active" onclick="showPanel('panel-calendario', this)">Calendário de Plantões</button>
-            <button class="nav-button" onclick="showPanel('panel-bonificacao', this)">Analista Destaque</button>
-            <button class="nav-button" onclick="showPanel('panel-fluxo', this)">Fluxo de Atendimento</button>
-            <button class="nav-button" onclick="showPanel('panel-implantacoes-main', this)">Painel de Implantações</button>
+            <button class="nav-button" data-panel-id="panel-calendario">Calendário de Plantões</button>
+            <button class="nav-button" data-panel-id="panel-bonificacao">Analista Destaque</button>
+            <button class="nav-button" data-panel-id="panel-fluxo">Fluxo de Atendimento</button>
+            <button class="nav-button" data-panel-id="panel-implantacoes-main">Painel de Implantações</button>
         </nav>
 
-        <section id="panel-calendario" class="panel-content">
+        <div id="timer-display" class="timer-display">Próxima aba em: 10 segundos</div>
+
+        <section id="panel-calendario" class="panel-content hidden">
             <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Calendário de Plantões – Apenas Sábados</h2>
 
             <div class="mb-10">
@@ -798,7 +812,6 @@
                     <div class="calendar-day weekend night-shift">
                         <span class="font-bold text-lg">14</span>
                         <span class="analyst-name analyst-lucas">Thiago</span>
-                        
                     </div>
                     <div class="calendar-day">
                         <span class="font-bold text-lg">15</span>
@@ -843,7 +856,6 @@
                     <div class="calendar-day weekend night-shift">
                         <span class="font-bold text-lg">28</span>
                         <span class="analyst-name analyst-carla">Geneses</span>
-                        
                     </div>
                     <div class="calendar-day">
                         <span class="font-bold text-lg">29</span>
@@ -1105,15 +1117,55 @@
     </div>
 
     <script>
-        // Função para mostrar o painel selecionado e esconder os outros
-        function showPanel(panelId, clickedButton) {
-            // Esconde todos os painéis
+        // Array com os IDs dos painéis na ordem desejada
+        const panelIds = ['panel-calendario', 'panel-bonificacao', 'panel-fluxo', 'panel-implantacoes-main'];
+        let currentPanelIndex = 0; // Índice do painel atualmente visível
+        const intervalTime = 10000; // Tempo em milissegundos (10 segundos)
+        let autoSlideInterval; // Variável para armazenar o ID do setInterval de troca automática
+        let countdownTimer; // Variável para armazenar o ID do setInterval do contador regressivo
+        let remainingTime = intervalTime / 1000; // Tempo restante para a próxima troca, em segundos
+
+        // Elemento HTML onde o timer será exibido
+        const timerDisplay = document.getElementById('timer-display');
+
+        // Função para atualizar a exibição do timer
+        function updateTimerDisplay() {
+            timerDisplay.textContent = `Próxima aba em: ${remainingTime} segundos`;
+        }
+
+        // Função para iniciar o ciclo de troca automática e o timer
+        function startAutoSlide() {
+            // Limpa quaisquer intervalos existentes para evitar duplicação
+            clearInterval(autoSlideInterval);
+            clearInterval(countdownTimer);
+
+            // Reinicia o tempo restante
+            remainingTime = intervalTime / 1000;
+            updateTimerDisplay(); // Atualiza a exibição imediatamente
+
+            // Inicia o contador regressivo
+            countdownTimer = setInterval(() => {
+                remainingTime--;
+                updateTimerDisplay();
+                if (remainingTime <= 0) {
+                    // Quando o tempo acaba, chama a função para a próxima aba
+                    nextPanel();
+                }
+            }, 1000); // Atualiza a cada 1 segundo
+
+            // Inicia o intervalo principal para a troca de painéis
+            autoSlideInterval = setInterval(nextPanel, intervalTime);
+        }
+
+        // Função para mostrar um painel específico e ativar seu botão de navegação
+        function showPanel(panelId) {
+            // Esconde todos os painéis de conteúdo
             const panels = document.querySelectorAll('.panel-content');
             panels.forEach(panel => {
                 panel.classList.add('hidden');
             });
 
-            // Remove a classe 'active' de todos os botões
+            // Remove a classe 'active' de todos os botões de navegação
             const buttons = document.querySelectorAll('.nav-button');
             buttons.forEach(button => {
                 button.classList.remove('active');
@@ -1122,16 +1174,40 @@
             // Mostra o painel selecionado
             document.getElementById(panelId).classList.remove('hidden');
 
-            // Adiciona a classe 'active' ao botão clicado
-            clickedButton.classList.add('active');
+            // Ativa o botão de navegação correspondente ao painel
+            const activeButton = document.querySelector(`.nav-button[data-panel-id="${panelId}"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+
+            // Atualiza o índice do painel atual para que o ciclo automático continue a partir daqui
+            currentPanelIndex = panelIds.indexOf(panelId);
+
+            // Reinicia o ciclo automático e o timer para a aba recém-selecionada
+            startAutoSlide();
         }
 
-        // Garante que o primeiro painel esteja visível e o botão ativo ao carregar a página
+        // Função para alternar para o próximo painel
+        function nextPanel() {
+            // Incrementa o índice do painel, voltando ao início se chegar ao fim
+            currentPanelIndex = (currentPanelIndex + 1) % panelIds.length;
+            // Mostra o próximo painel (isso também reiniciará o timer)
+            showPanel(panelIds[currentPanelIndex]);
+        }
+
+        // Adiciona event listeners para os botões de navegação
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('panel-calendario').classList.remove('hidden');
-            document.querySelector('.nav-button').classList.add('active');
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const panelId = this.getAttribute('data-panel-id');
+                    showPanel(panelId); // Chama showPanel ao clicar no botão
+                });
+            });
+
+            // Garante que o primeiro painel esteja visível e o ciclo automático inicie ao carregar a página
+            showPanel(panelIds[currentPanelIndex]);
         });
     </script>
-    
 </body>
 </html>
