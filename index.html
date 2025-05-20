@@ -547,8 +547,80 @@
     </style>
 </head>
 <body>
+<div class="header-container">
+    <div class="logo-group">
+        <img src="img/logoalpha.png" alt="Logo Alpha" class="logo-tech"
+             onerror="this.src='https://placehold.co/200x120/f1f5f9/94a3b8?text=Alpha'">
+        <img src="img/logoagro.jpg" alt="Logo Agro" class="logo-tech"
+             onerror="this.src='https://placehold.co/200x120/f1f5f9/94a3b8?text=Agro'">
+    </div>
+    <div class="company-name">
+        ALPHA SOFTWARE
+    </div>
+</div>
+
+<style>
+    .header-container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between; /* Logos à esquerda, texto à direita */
+        align-items: center;
+        padding: 20px 40px;
+        background-color: #f1f5f9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+    }
+
+    .logo-group {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .logo-tech {
+        height: 100px;
+        width: auto;
+        border-radius: 12px;
+        filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.08));
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .logo-tech:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.12));
+    }
+
+    .company-name {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e293b;
+        text-align: right;
+    }
+
+    @media (max-width: 768px) {
+        .header-container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .company-name {
+            text-align: left;
+            font-size: 20px;
+        }
+
+        .logo-tech {
+            height: 80px;
+        }
+    }
+</style>
+
+
+
     <div class="main-site-container">
-        <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Painéis de Gestão e Suporte - 05/2025</h1>
+        <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">Painéis de Gestão e Suporte Alpha - 05/2025</h1>
 
         <nav class="nav-buttons">
             <button class="nav-button active" onclick="showPanel('panel-calendario', this)">Calendário de Plantões</button>
@@ -788,11 +860,11 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-2">
                         <div class="legend-item">
                             <div class="legend-color-box analyst-joao"></div>
-                            <span>João</span>
+                            <span>Geneses</span>
                         </div>
                         <div class="legend-item">
                             <div class="legend-color-box analyst-carla"></div>
-                            <span>Carla</span>
+                            <span>...</span>
                         </div>
                         <div class="legend-item">
                             <div class="legend-color-box analyst-pedro"></div>
@@ -800,11 +872,11 @@
                         </div>
                         <div class="legend-item">
                             <div class="legend-color-box analyst-ana"></div>
-                            <span>Ana</span>
+                            <span>Luiz</span>
                         </div>
                         <div class="legend-item">
                             <div class="legend-color-box analyst-lucas"></div>
-                            <span>Lucas</span>
+                            <span>Thiago</span>
                         </div>
                         <div class="legend-item">
                             <span class="text-xl mr-2">☀️</span>
